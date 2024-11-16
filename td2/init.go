@@ -3,11 +3,12 @@ package tenderduty
 import (
 	"embed"
 	"fmt"
-	dash "github.com/blockpane/tenderduty/v2/td2/dashboard"
 	"log"
 	"os"
 	"strings"
 	"time"
+
+	dash "github.com/sg-1validator/tenderduty/v2/td2/dashboard"
 )
 
 //go:embed static/*

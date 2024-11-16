@@ -3,8 +3,6 @@ package dash
 import (
 	"embed"
 	"encoding/json"
-	"github.com/gorilla/websocket"
-	"github.com/textileio/go-threads/broadcast"
 	"io/fs"
 	"log"
 	"net/http"
@@ -12,6 +10,9 @@ import (
 	"sort"
 	"sync"
 	"time"
+
+	"github.com/gorilla/websocket"
+	"github.com/textileio/go-threads/broadcast"
 )
 
 var (
@@ -155,6 +156,6 @@ type CacheHandler struct{}
 
 func (ch CacheHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	writer.Header().Set("Cache-Control", "public, max-age=3600")
-	writer.Header().Set("X-Powered-By", "https://github.com/blockpane/tenderduty")
+	writer.Header().Set("X-Powered-By", "https://github.com/sg-1validator/tenderduty")
 	http.FileServer(http.FS(rootDir)).ServeHTTP(writer, request)
 }

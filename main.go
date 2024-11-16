@@ -4,12 +4,13 @@ import (
 	_ "embed"
 	"flag"
 	"fmt"
-	"golang.org/x/term"
 	"log"
 	"os"
 	"syscall"
 
-	td2 "github.com/blockpane/tenderduty/v2/td2"
+	"golang.org/x/term"
+
+	td2 "github.com/sg-1validator/tenderduty/v2/td2"
 )
 
 //go:embed example-config.yml

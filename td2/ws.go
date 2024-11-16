@@ -14,8 +14,8 @@ import (
 	"strings"
 	"time"
 
-	dash "github.com/blockpane/tenderduty/v2/td2/dashboard"
 	"github.com/gorilla/websocket"
+	dash "github.com/sg-1validator/tenderduty/v2/td2/dashboard"
 	pbtypes "github.com/tendermint/tendermint/proto/tendermint/types"
 )
 

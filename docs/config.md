@@ -11,16 +11,18 @@ $ tenderduty -example-config > config.yml
 Or if using the docker image:
 
 ```
-$ docker run --rm ghcr.io/blockpane/tenderduty:latest -example-config >config.yml
+$ docker run --rm ghcr.io/sg-1validator/tenderduty:latest -example-config >config.yml
 ```
 
-* [General Settings](#general-settings)
-* [Pagerduty Settins](#pagerduty-settings)
-* [Discord Settings](#discord-settings)
-* [Telegram Settings](#telegram-settings)
-* [Chain Specific Settings](#chain-specific-settings)
-* [Chain Alerting Settings](#chain-alerting-settings)
-* [Node Settings](#node-settings)
+- [Settings for config.yml](#settings-for-configyml)
+  - [General Settings](#general-settings)
+  - [PagerDuty Settings](#pagerduty-settings)
+  - [Discord Settings](#discord-settings)
+  - [Telegram Settings](#telegram-settings)
+  - [Health Check Settings](#health-check-settings)
+  - [Chain Specific Settings](#chain-specific-settings)
+  - [Chain Alerting Settings](#chain-alerting-settings)
+  - [Node Settings:](#node-settings)
 
 A few notes on how Go handles YAML:
 
