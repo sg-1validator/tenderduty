@@ -2,18 +2,21 @@ package tenderduty
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
-	dash "github.com/blockpane/tenderduty/v2/td2/dashboard"
-	"github.com/gorilla/websocket"
-	pbtypes "github.com/tendermint/tendermint/proto/tendermint/types"
 	"log"
+	"net"
 	"net/url"
 	"strconv"
 	"strings"
 	"time"
+
+	dash "github.com/blockpane/tenderduty/v2/td2/dashboard"
+	"github.com/gorilla/websocket"
+	pbtypes "github.com/tendermint/tendermint/proto/tendermint/types"
 )
 
 const (
@@ -417,21 +420,42 @@ func NewClient(u string, allowInsecure bool) (*TmConn, error) {
 		return nil, errors.New("allowInsecure must be true if protocol is not using TLS")
 	}
 
-	conn := &websocket.Conn{}
+	var conn *websocket.Conn
 
 	switch {
 
-	// TODO: add custom UDS dialer
+	// Custom UDS dialer
 	case dialUnix:
+		unixDialer := websocket.Dialer{
+			NetDialContext: func(ctx context.Context, network, address string) (net.Conn, error) {
+				return net.Dial("unix", endpoint.Path) // Use endpoint.Path for the Unix socket path
+			},
+		}
+		conn, _, err = unixDialer.Dial(endpoint.String(), nil)
+		if err != nil {
+			return nil, fmt.Errorf("could not dial UDS client to %s: %s", endpoint.String(), err.Error())
+		}
 
-	// TODO: add custom TLS dialer to allow self-signed certs.
-	// case allowInsecure && endpoint.Scheme == "wss":
+	// Custom TLS dialer for self-signed certificates
+	case allowInsecure && endpoint.Scheme == "wss":
+		tlsConfig := &tls.Config{
+			InsecureSkipVerify: true, // WARNING: Only use this for testing or trusted environments
+		}
+		tlsDialer := websocket.Dialer{
+			TLSClientConfig: tlsConfig,
+		}
+		conn, _, err = tlsDialer.Dial(endpoint.String(), nil)
+		if err != nil {
+			return nil, fmt.Errorf("could not dial ws client to %s: %s", endpoint.String(), err.Error())
+		}
 
 	default:
+		// Default dialer
 		conn, _, err = websocket.DefaultDialer.Dial(endpoint.String(), nil)
 		if err != nil {
 			return nil, fmt.Errorf("could not dial ws client to %s: %s", endpoint.String(), err.Error())
 		}
 	}
+
 	return &TmConn{Conn: conn}, nil
 }
